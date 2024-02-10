@@ -1,0 +1,103 @@
+#include <iostream>
+#include <cmath>
+
+char draw[200][200];
+
+void plot(int x, int y) {
+    std::cout << "(" << x << "," << y << ")" << std::endl;
+    draw[x][y]='#';
+}
+
+void draw_line_low(int x0, int y0, int x1, int y1) {
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+    int yi = 1;
+    if (dy < 0) {
+        yi = -1;
+        dy = -dy;
+    }
+    int D = 2 * dy - dx;
+    int y = y0;
+
+    for (int x = x0; x <= x1; x++) {
+        plot(x, y);  // plot the pixel
+        if (D > 0) {
+            y += yi;
+            D -= 2 * dx;
+        }
+        D += 2 * dy;
+    }
+}
+
+void draw_line_high(int x0, int y0, int x1, int y1) {
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+    int xi = 1;
+    if (dx < 0) {
+        xi = -1;
+        dx = -dx;
+    }
+    int D = 2 * dx - dy;
+    int x = x0;
+
+    for (int y = y0; y <= y1; y++) {
+        plot(x, y);  // plot the pixel
+        if (D > 0) {
+            x += xi;
+            D -= 2 * dy;
+        }
+        D += 2 * dx;
+    }
+}
+
+void draw_line(int x0, int y0, int x1, int y1) {
+    if (std::abs(y1 - y0) < std::abs(x1 - x0)) {
+        if (x0 > x1) {
+            draw_line_low(x1, y1, x0, y0);
+        } else {
+            draw_line_low(x0, y0, x1, y1);
+        }
+    } else {
+        if (y0 > y1) {
+            draw_line_high(x1, y1, x0, y0);
+        } else {
+            draw_line_high(x0, y0, x1, y1);
+        }
+    }
+}
+
+int main() {
+    for(int i=0; i<=10; i++) {
+        for(int j=0; j<=10; j++) {
+            draw[i][j]='*';
+        }
+    }
+    // Test Case 1: (1,1), (8,4)
+    std::cout << "Test Case 1:" << std::endl;
+    draw_line(1, 1, 8, 4);
+    
+    for(int i=0; i<=10; i++) {
+        for(int j=0; j<=10; j++) {
+            std::cout<<draw[i][j];
+        }
+        std::cout<<std::endl;
+    }
+    
+    for(int i=0; i<=10; i++) {
+        for(int j=0; j<=10; j++) {
+            draw[i][j]='*';
+        }
+    }
+    // Test Case 2: (1,1), (4,8)
+    std::cout << "\nTest Case 2:" << std::endl;
+    draw_line(1, 1, 4, 8);
+    
+    for(int i=0; i<=10; i++) {
+        for(int j=0; j<=10; j++) {
+            std::cout<<draw[i][j];
+        }
+        std::cout<<std::endl;
+    }
+
+    return 0;
+}
